@@ -51,6 +51,7 @@ var msalConfig = {
 };
 
 // if certificateName is specified in config, then we change the MSAL config to use it
+/*
 if ( config.azCertificateName !== '') {
   const privateKeyData = fs.readFileSync(config.azCertificatePrivateKeyLocation, 'utf8');
   console.log(config.azCertThumbprint);  
@@ -66,7 +67,7 @@ if ( config.azCertificateName !== '') {
     }
   };
 }
-
+*/
 const cca = new msal.ConfidentialClientApplication(msalConfig);
 const msalClientCredentialRequest = {
   scopes: ["bbb94529-53a3-4be5-a069-7eaf2712b826/.default"],

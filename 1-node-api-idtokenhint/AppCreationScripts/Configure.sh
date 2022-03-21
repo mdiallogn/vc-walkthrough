@@ -68,9 +68,9 @@ echo "Updating ..\config.json"
 sed -i -e "s/<YOUR-AAD-TENANDID>/$tenantId/g" ../config.json
 sed -i -e "s/<YOUR-AAD-CLIENTID-FOR-KEYVAULT-ACCESS>/$appId/g" ../config.json
 sed -i -e "s/<YOUR-AAD-CLIENTSECRET-FOR-KEYVAULT-ACCESS>/$clientSecret/g" ../config.json
-sed -i -e "s/<YOUR-AAD-CERTNAME>/$certSubject/g" ../config.json
-sed -i -e "s^<YOUR-AAD-CERTLOCATION>^$certLocation^g" ../config.json # alt delimiter as certLocation has / as path delimiter
-sed -i -e "s/<YOUR-AAD-CERTTHUMBPRINT>/$certThumbprint/g" ../config.json
+#sed -i -e "s/<YOUR-AAD-CERTNAME>/$certSubject/g" ../config.json
+#sed -i -e "s^<YOUR-AAD-CERTLOCATION>^$certLocation^g" ../config.json # alt delimiter as certLocation has / as path delimiter
+#sed -i -e "s/<YOUR-AAD-CERTTHUMBPRINT>/$certThumbprint/g" ../config.json
 
 # creating report for the user
 clientPortalUrl="https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/CallAnAPI/appId/$appId"

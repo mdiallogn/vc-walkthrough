@@ -222,4 +222,3 @@ mainApp.app.get('/api/issuer/issuance-response', async (req, res) => {
       }
   })
 })
-
