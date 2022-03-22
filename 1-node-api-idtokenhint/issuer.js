@@ -163,6 +163,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
     // the QR code to prevent the user from scanning it twice (resulting in an error since the request is already deleted)
     if ( issuanceResponse.code == "request_retrieved" ) {
       message = "QR Code is scanned. Waiting for issuance to complete...";
+     
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
         var sessionData = {
           "status" : "request_retrieved",
@@ -202,6 +203,8 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
         });
       })      
     }
+
+    console.log(message);
     
     res.send()
   });  

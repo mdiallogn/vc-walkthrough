@@ -9,8 +9,8 @@ var express = require('express')
 var session = require('express-session')
 var base64url = require('base64url')
 var secureRandom = require('secure-random');
-var bodyParser = require('body-parser')
-// mod.cjs
+var bodyParser = require('body-parser');
+var serveIndex = require('serve-index');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const https = require('https')
 const url = require('url')
@@ -85,7 +85,9 @@ const port = process.env.PORT || 8080;
 var parser = bodyParser.urlencoded({ extended: false });
 
 // Serve static files out of the /public directory
-app.use(express.static('public'))
+app.use(express.static('public'));
+
+app.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
 
 // Set up a simple server side session store.
 // The session store will briefly cache issuance requests

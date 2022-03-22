@@ -1,5 +1,5 @@
-﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
-     Licensed under the MIT License. -->
+﻿
+
 
 <html lang="en">
 
@@ -70,6 +70,8 @@
                         }).catch(error => { console.log(error.message); })
                     }).catch(error => { console.log(error.message); })
                     var checkStatus = setInterval(function () {
+
+                        console.log("debug :: "+JSON.stringify(respIssuanceReq));
                         fetch('api/issuer/issuance-response?id=' + respIssuanceReq.id )
                             .then(response => response.text())
                             .catch(error => document.getElementById("message").innerHTML = error)
