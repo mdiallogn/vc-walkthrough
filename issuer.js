@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////
 // Node packages
 var express = require('express')
-var session = require('express-session')
+var session = require('express-session');
 var base64url = require('base64url')
 var secureRandom = require('secure-random');
 var bodyParser = require('body-parser')
