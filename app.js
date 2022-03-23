@@ -135,7 +135,12 @@ app.get("/echo",
 app.get('/', function (req, res) { 
   requestTrace( req );
   res.sendFile('public/index.html', {root: __dirname})
-})
+});
+
+app.get('/.well-known/did-configuration.json', (req, res) => {
+    const wellknown = require('./CredentialFiles/did-configuration.json');
+    res.send(wellknown);
+});
 
 var verifier = require('./verifier.js');
 var issuer = require('./issuer.js');
