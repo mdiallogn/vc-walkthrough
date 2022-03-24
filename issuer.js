@@ -106,8 +106,8 @@ mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
     issuanceConfig.issuance.pin.value = generatePin( issuanceConfig.issuance.pin.length );
   }
   // here you could change the payload manifest and change the firstname and lastname
-  issuanceConfig.issuance.claims.given_name = "Megan";
-  issuanceConfig.issuance.claims.family_name = "Bowen";
+  issuanceConfig.issuance.claims.given_name = "Volodymyr";
+  issuanceConfig.issuance.claims.family_name = "Zelenskyy";
 
   console.log( 'VC Client API Request' );
   console.log( issuanceConfig );
