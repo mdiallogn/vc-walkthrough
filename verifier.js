@@ -102,7 +102,7 @@ mainApp.app.get('/api/verifier/presentation-request', async (req, res) => {
     }
   };
 
-  var client_api_request_endpoint = `https://beta.did.msidentity.com/v1.0/${mainApp.config.azTenantId}/verifiablecredentials/request`;
+  var client_api_request_endpoint = `https://beta.eu.did.msidentity.com/v1.0/${mainApp.config.azTenantId}/verifiablecredentials/request`;
   const response = await fetch(client_api_request_endpoint, fetchOptions);
   var resp = await response.json()
 

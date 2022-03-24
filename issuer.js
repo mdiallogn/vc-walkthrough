@@ -123,7 +123,7 @@ mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
     }
   };
 
-  var client_api_request_endpoint = `https://beta.did.msidentity.com/v1.0/${mainApp.config.azTenantId}/verifiablecredentials/request`;
+  var client_api_request_endpoint = `https://beta.eu.did.msidentity.com/v1.0/${mainApp.config.azTenantId}/verifiablecredentials/request`;
   const response = await fetch(client_api_request_endpoint, fetchOptions);
   var resp = await response.json()
   // the response from the VC Request API call is returned to the caller (the UI). It contains the URI to the request which Authenticator can download after
