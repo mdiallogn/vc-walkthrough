@@ -5,8 +5,8 @@
     <head>
         <meta charset="utf-8">
         <title>Verifiable Credential Employee Request API Sample - Verifier</title>
-        <meta name="description" content="Verified Credentials Expert">
-        <meta name="author" content="Microsoft">
+        <meta name="description" content="Verified Credentials Employee">
+        <meta name="author" content="Litware369">
         <link rel="stylesheet" href="styles.css">
         <link rel="icon" href="Litware-Logo.png">
         
@@ -85,7 +85,7 @@
                                     if (respMsg.status == 'presentation_verified') {
                                         document.getElementById('message').innerHTML = respMsg.message;
                                         document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
-                                        document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" is a Verifiable Credential Expert";
+                                        document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" is a Verified Employee";
                                         clearInterval(checkStatus);
                                     }
                                 }

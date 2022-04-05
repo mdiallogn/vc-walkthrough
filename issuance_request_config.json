@@ -12,8 +12,8 @@
     }
   },
   "issuance": {
-    "type": "VerifiedCredentialExpert",
-    "manifest": "https://beta.eu.did.msidentity.com/v1.0/164f6854-a553-4084-9dc8-499819f6fceb/verifiableCredential/contracts/VerifiedCredentialExpert",
+    "type": "VerifiedCredentialEmployeeStep1",
+    "manifest": "https://beta.eu.did.msidentity.com/v1.0/164f6854-a553-4084-9dc8-499819f6fceb/verifiableCredential/contracts/VerifiedCredentialEmployeeStep1",
     "pin": {
       "value": "123456",
       "length": 4

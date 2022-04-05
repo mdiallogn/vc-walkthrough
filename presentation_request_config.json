@@ -16,7 +16,7 @@
     "includeReceipt": true,
     "requestedCredentials": [
       {
-        "type": "VerifiedCredentialExpert",
+        "type": "VerifiedCredentialEmployeeStep1",
         "purpose": "the purpose why the verifier asks for a VC",
         "acceptedIssuers": [ "...set at runtime..." ]
       }
