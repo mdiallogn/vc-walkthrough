@@ -47,9 +47,9 @@ if ( issuanceConfig.callback.headers ) {
 function requestTrace( req ) {
   var dateFormatted = new Date().toISOString().replace("T", " ");
   var h1 = '//****************************************************************************';
-  console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
-  console.log( `Headers:`)
-  console.log(req.headers);
+  //console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
+  //console.log( `Headers:`)
+  //console.log(req.headers);
 }
 
 function generatePin( digits ) {
@@ -109,8 +109,8 @@ mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
   issuanceConfig.issuance.claims.given_name = "John";
   issuanceConfig.issuance.claims.family_name = "Doe";
 
-  console.log( 'VC Client API Request' );
-  console.log( issuanceConfig );
+  //console.log( 'VC Client API Request' );
+  //console.log( issuanceConfig );
 
   var payload = JSON.stringify(issuanceConfig);
   const fetchOptions = {

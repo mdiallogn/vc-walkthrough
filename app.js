@@ -53,7 +53,7 @@ var msalConfig = {
 
 const cca = new msal.ConfidentialClientApplication(msalConfig);
 const msalClientCredentialRequest = {
-  scopes: ["bbb94529-53a3-4be5-a069-7eaf2712b826/.default"],
+  scopes: ["3db474b9-6a0c-4840-96ac-1fceb342124f/.default"],
   skipCache: false, 
 };
 module.exports.msalCca = cca;
@@ -95,9 +95,9 @@ module.exports.app = app;
 function requestTrace( req ) {
   var dateFormatted = new Date().toISOString().replace("T", " ");
   var h1 = '//****************************************************************************';
-  console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
-  console.log( `Headers:`)
-  console.log(req.headers);
+  //console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
+  //console.log( `Headers:`)
+ // console.log(req.headers);
 }
 
 // echo function so you can test that you can reach your deployment
