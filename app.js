@@ -188,6 +188,7 @@ app.get('/auth-callback', (req, res) => {
 
 // Serve index.html as the home page
 app.get('/', function (req, res) { 
+    console.log("hostname ::: "+req.hostname);
     requestTrace( req );
     res.sendFile('public/index.html', {root: __dirname});
 });
