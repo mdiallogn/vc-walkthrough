@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title style="color: #fff;">Verifiable Credential Employee Request API Sample - Verifier</title>
+        <title>Verifiable Credential Employee Request API Sample - Verifier</title>
         <meta name="description" content="Verified Credentials Employee">
         <meta name="author" content="Litware369">
         <link rel="stylesheet" href="styles.css">
@@ -15,29 +15,22 @@
         <div id="wrap">
             <div style="text-align: center;">
                 <img src="Litware-Logo.png" height=200px; />
-                <h1 style="color: #fff;">Employee Verification</h1>
+                <h1>Verifiable Credential Employee Verification</h1>
         
-           <!-- <button type="button" id="sign-in" class="button">VERIFY CREDENTIAL</button>
-            <button type="button" id="get-credentials" class="button" onclick="getCredentials()">GET CREDENTIAL</button>
-            <button type="button" id="true-id" class="button" onclick="redirectToTrueIdentity()">USE TRUE IDENTITY</button>
-            <button type="button" id="sign-in" class="button" onclick="updateStyle()">Already Verified</button>
-            <button type="button" id="confirm-id" class="button" style="opacity: 0.6; cursor: not-allowed" disabled>Confirm your True Identity Card</button>
-            <button type="button" id="portal-id" class="button" style="opacity: 0.6;" onclick="scan()">Access portal</button>
-            -->
-            <button type="button" id="sign-in" class="button" onclick="scan()">ACCESS PORTAL</button>
+            <button type="button" id="sign-in" class="button">VERIFY CREDENTIAL</button>
             <div id="qrText"  style="display:none;">
-                <p class="small-text" style="color: #fff;">
-                    <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"> <br>
+                <p class="small-text">
+                    <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
                     Scan with Microsoft Authenticator
                 </p>
             </div>
-            <a id="deeplink" style="display: none;margin-top: 10px; color: #fff;">Tap to open Authenticator on mobile</a>
+            <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
             <div id="qrcode" style="text-align: center"></div>
             <div id="pinCodeText" style="display: none"></div>
 
             <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none">
                <i class="fas fa-user-check green icon-text-large margin-bottom-25"></i>
-               <div id="message" style="color: #fff;"></div>
+               <div id="message"></div>
                 <br />
                <div id="subject"></div>
                 <br />
@@ -45,130 +38,60 @@
             </div>
 
             <script src="qrcode.min.js"></script>
-
             <script>
-                const updateStyle = () => {
-                    const confirmed = document.getElementById('confirm-id');
-                    const portal =  document.getElementById('portal-id');
-                    const trueId = document.getElementById('true-id');
-                    const verified = document.getElementById('sign-in');
-
-                    confirmed.style.opacity = "1.0";
-                    portal.style.opacity = "1.0";
-
-                    trueId.style.opacity = "0.6";
-                    verified.style.opacity = "0.6";
-                }
-
-               const qrcodeFooter = () => {
-                    var x = document.createElement("FOOTER");
-                    x.setAttribute("id", "qrcodeFooter");
-                    document.getElementById('qrcode').appendChild(x);
-
-                    var y = document.createElement("h1"); 
-                    var t = document.createTextNode("LITWARE 369");
-                    y.appendChild(t);
-
-                    document.getElementById("qrcodeFooter").appendChild(y);
-                }
-
-                const getCredentials = () => {
-                    window.location = "issuer.html"
-                }
-
-                const redirectToTrueIdentity = () => {
-                    window.location = `https://trueidentityinc.azurewebsites.net/?returnUrl=https://4171-2a01-110-8012-1013-515-a7fc-6b02-978c.ngrok.io/api/verifier/true-dentity-request-callback&firstName=${document.getElementById('firstName')}&lastName=${document.getElementById('lastName')}`;
-                }
-            </script>
-
-            <script>
-
                 var signIn = document.getElementById('sign-in');
                 var signOut = document.getElementById('sign-out');
                 var display = document.getElementById('display');
-                var qrcode = new QRCode("qrcode", { width: 300,
-                                                    height: 300,
-                                                    colorDark : "#5868bf",
-                                                    colorLight : "#ffffff",
-                                                    correctLevel : QRCode.CorrectLevel.H
-                                                }
-                                        );
-            
+                var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
                 var respPresentationReq = null;
-
-                const scan = () => {
-                  //  signIn.addEventListener('click', () => {
-                        
-                        fetch('/api/verifier/presentation-request')
-                        .then(function(response) {
-                            response.text()
-                            .catch(error => document.getElementById("message").innerHTML = error)
-                            .then(function(message) {
-                                respPresentationReq = JSON.parse(message);
-                                if( /Android/i.test(navigator.userAgent) ) {
-                                    console.log(`Android device! Using deep link (${respPresentationReq.url}).`);
-                                    window.location.href = respPresentationReq.url; setTimeout(function () {
-                                    window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
-                                } else if (/iPhone/i.test(navigator.userAgent)) {
-                                    console.log(`iOS device! Using deep link (${respPresentationReq.url}).`);
-                                    window.location.replace(respPresentationReq.url);
-                                } else {
-                                    console.log(`Not Android or IOS. Generating QR code encoded with ${message}`);
-                                   // qrcodeFooter();
-                                    qrcode.makeCode(respPresentationReq.url);
-                                    document.getElementById('sign-in').style.visibility = "hidden";
-                                    document.getElementById('true-id').style.visibility = "hidden";
-                                    document.getElementById('confirm-id').style.visibility = "hidden";
-                                    document.getElementById('portal-id').style.visibility = "hidden";
-                                    document.getElementById('qrText').style.display = "block";
-                                }
-                            }).catch(error => { console.log(error.message); })
+                signIn.addEventListener('click', () => {
+                    fetch('/api/verifier/presentation-request')
+                    .then(function(response) {
+                        response.text()
+                        .catch(error => document.getElementById("message").innerHTML = error)
+                        .then(function(message) {
+                            respPresentationReq = JSON.parse(message);
+                            if( /Android/i.test(navigator.userAgent) ) {
+                                console.log(`Android device! Using deep link (${respPresentationReq.url}).`);
+                                window.location.href = respPresentationReq.url; setTimeout(function () {
+                                window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
+                            } else if (/iPhone/i.test(navigator.userAgent)) {
+                                console.log(`iOS device! Using deep link (${respPresentationReq.url}).`);
+                                window.location.replace(respPresentationReq.url);
+                            } else {
+                                console.log(`Not Android or IOS. Generating QR code encoded with ${message}`);
+                                qrcode.makeCode(respPresentationReq.url);
+                                document.getElementById('sign-in').style.visibility = "hidden";
+                                document.getElementById('qrText').style.display = "block";
+                            }
                         }).catch(error => { console.log(error.message); })
-                        var checkStatus = setInterval(function () {
-                            fetch('api/verifier/presentation-response?id=' + respPresentationReq.id )
-                                .then(response => response.text())
-                                .catch(error => document.getElementById("message").innerHTML = error)
-                                .then(response => {
-                                    if (response.length > 0) {
-                                    
-                                        respMsg = JSON.parse(response);
-                                        // QR Code scanned
-                                        if (respMsg.status == 'request_retrieved') {
-                                            document.getElementById('message-wrapper').style.display = "block";
-                                            document.getElementById('qrText').style.display = "none";
-                                            document.getElementById('qrcode').style.display = "none";
-                                            document.getElementById('message').innerHTML = respMsg.message;
-                                        }
-                                        
-                                        if (respMsg.status == 'presentation_verified') {
-                                            const displayMessages = () => {
-                                                document.getElementById('message').innerHTML = respMsg.message;
-                                                document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
-                                                document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" is a Verified Employee";
-                                            }
-                                            
-                                            //setTimeout(displayMessages, 2000);
-                                            window.location = "profile.html";
-                                            clearInterval(checkStatus);
-                                        }
+                    }).catch(error => { console.log(error.message); })
+                    var checkStatus = setInterval(function () {
+                        fetch('api/verifier/presentation-response?id=' + respPresentationReq.id )
+                            .then(response => response.text())
+                            .catch(error => document.getElementById("message").innerHTML = error)
+                            .then(response => {
+                                if (response.length > 0) {
+                                    console.log(response)
+                                    respMsg = JSON.parse(response);
+                                    // QR Code scanned
+                                    if (respMsg.status == 'request_retrieved') {
+                                        document.getElementById('message-wrapper').style.display = "block";
+                                        document.getElementById('qrText').style.display = "none";
+                                        document.getElementById('qrcode').style.display = "none";
+                                        document.getElementById('message').innerHTML = respMsg.message;
                                     }
-                                })
-                        }, 500); //change this to higher interval if you use ngrok to prevent overloading the free tier service
-                    //})
-                }
-                // /*
-                const trueIdentity = document.getElementById('true-id');
-                trueIdentity.addEventListener('click', () => {
-                   fetch('/api/verifier/true-identity-request', {mode: "no-cors", headers: { 'Content-Type': 'application/json'}})
-                    .then((response) => {
-                        // console.log('response :: ', response)
-                    }).catch((error) => {
-                        console.log('on error :: ', JSON.stringify(error));
-                    })              
-                
-                });
-                
-
+                                    
+                                    if (respMsg.status == 'presentation_verified') {
+                                        document.getElementById('message').innerHTML = respMsg.message;
+                                        document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
+                                        document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" is a Verified Employee";
+                                        clearInterval(checkStatus);
+                                    }
+                                }
+                            })
+                    }, 1500); //change this to higher interval if you use ngrok to prevent overloading the free tier service
+                })
             </script>
             </div>
 

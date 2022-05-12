@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js ./config.json ./issuance_request_config.json ./presentation_request_config.json"
+    
   },
   "author": "",
   "license": "ISC",
@@ -16,10 +17,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "fetch-mock": "^9.11.0",
-    "file-system": "^2.2.2",
-    "mongodb": "^4.5.0",
     "node-fetch": "^3.2.2",
-    "qs": "^6.10.3",
     "secure-random": "^1.1.2",
     "serve-index": "^1.9.1",
     "uuid": "^8.3.2"

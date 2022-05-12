@@ -18,7 +18,6 @@ const { SSL_OP_COOKIE_EXCHANGE } = require('constants');
 var msal = require('@azure/msal-node');
 const fs = require('fs');
 const crypto = require('crypto');
-const qs = require('qs');
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // config file can come from command line, env var or the default
@@ -66,7 +65,7 @@ module.exports.msalClientCredentialRequest = msalClientCredentialRequest;
 const app = express()
 const port = process.env.PORT || 8080;
 
-app.use(bodyParser.urlencoded({ extended: false }));
+var parser = bodyParser.urlencoded({ extended: false });
 
 // Serve static files out of the /public directory
 app.use(express.static('public'));
@@ -98,7 +97,7 @@ function requestTrace( req ) {
   var h1 = '//****************************************************************************';
   //console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
   //console.log( `Headers:`)
-  //console.log(req.headers);
+ // console.log(req.headers);
 }
 
 // echo function so you can test that you can reach your deployment
@@ -115,87 +114,19 @@ app.get("/echo",
     }
 );
 
-
+// Serve index.html as the home page
+app.get('/', function (req, res) { 
+  requestTrace( req );
+  res.sendFile('public/index.html', {root: __dirname})
+});
 
 app.get('/.well-known/did-configuration.json', (req, res) => {
     const wellknown = require('./CredentialFiles/did-configuration.json');
     res.send(wellknown);
 });
 
-const authConfig = {
-  auth: {
-      clientId: config.azClientId,
-      authority: "https://login.microsoftonline.com/"+config.azTenantId,
-      clientSecret: config.azClientSecret
-  },
-  system: {
-      loggerOptions: {
-          loggerCallback(loglevel, message, containsPii) {
-              console.log(message);
-          },
-          piiLoggingEnabled: false,
-          logLevel: msal.LogLevel.Verbose,
-      }
-  }
-};
-
-const ccaBis = new msal.ConfidentialClientApplication(authConfig);
-
-app.get('/auth', (req, res) => {
- 
-      const authCodeUrlParameters = {
-          scopes: ["user.read"],
-          redirectUri: `https://${req.hostname}/auth-callback`,
-      };
-
-      // get url to sign user in and consent to scopes needed for application
-      ccaBis.getAuthCodeUrl(authCodeUrlParameters).then((response) => {
-          res.redirect(response);
-      }).catch((error) => console.log(JSON.stringify(error)));
-});
-
-app.get('/auth-callback', (req, res) => {
-  const tokenRequest = {
-      code: req.query.code,
-      scopes: ["user.read"],
-      redirectUri: `https://${req.hostname}/auth-callback`,
-  };
-
-  ccaBis.acquireTokenByCode(tokenRequest).then(async(response) => {
-      //console.log("\nResponse: \n:", response);
-
-      const employee = await response.idTokenClaims.name.split(" ");
-      const jsonEmployee = {firstName: employee[1], lastName: employee[0]};
-
-      fs.writeFile('public/employees.json', JSON.stringify(jsonEmployee), err => {
-     
-        // Checking for errors
-        if (err) throw err; 
-       
-        console.log("Done writing"); 
-       // res.redirect(getFormattedUrl(req));
-       // res.send();
-      
-      });
-      console.log("data :: ", jsonEmployee);
-      res.sendFile('public/issuer.html', {root: __dirname})
-      //res.sendStatus(200);
-  }).catch((error) => {
-      console.log(error);
-      res.status(500).send(error);
-  });
-});
-
-// Serve index.html as the home page
-app.get('/', function (req, res) { 
-    console.log("hostname ::: "+req.hostname);
-    requestTrace( req );
-    res.sendFile('public/index.html', {root: __dirname});
-});
-
 var verifier = require('./verifier.js');
 var issuer = require('./issuer.js');
-const { hostname } = require('os');
 
 // start server
 app.listen(port, () => console.log(`Example issuer app listening on port ${port}!`))

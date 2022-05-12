@@ -21,7 +21,6 @@ const { Console } = require('console');
 var msal = require('@azure/msal-node');
 var uuid = require('uuid');
 var mainApp = require('./app.js');
-const res = require('express/lib/response');
 
 var parser = bodyParser.urlencoded({ extended: false });
 
@@ -47,19 +46,10 @@ if ( presentationConfig.callback.headers ) {
 function requestTrace( req ) {
   var dateFormatted = new Date().toISOString().replace("T", " ");
   var h1 = '//****************************************************************************';
- // console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
-  //console.log( `Headers:`)
-  //console.log(req.headers);
+  console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
+  console.log( `Headers:`)
+  console.log(req.headers);
 }
-
-
-// mainApp.app.get('/api/verifier/true-dentity-request-callback', (req, res) => {
-//   console.log('result ::: ', res);
-//   const url = './public/index.html';
-
-//   res.send('<h1> verified successfullt !</h1>');
-//  // res.send(url);
-// })
 /**
  * This method is called from the UI to initiate the presentation of the verifiable credential
  */
@@ -91,7 +81,7 @@ mainApp.app.get('/api/verifier/presentation-request', async (req, res) => {
         });  
       return; 
   }
- // console.log( `accessToken: ${accessToken}` );
+  console.log( `accessToken: ${accessToken}` );
   // modify the callback method to make it easier to debug 
   // with tools like ngrok since the URI changes all the time
   // this way you don't need to modify the callback URL in the payload every time
@@ -148,7 +138,7 @@ mainApp.app.post('/api/verifier/presentation-request-callback', parser, async (r
     // the request will be deleted from the server immediately.
     // That's why it is so important to capture this callback and relay this to the UI so the UI can hide
     // the QR code to prevent the user from scanning it twice (resulting in an error since the request is already deleted)            
-    if (presentationResponse.code == "request_retrieved" ) {
+    if ( presentationResponse.code == "request_retrieved" ) {
       mainApp.sessionStore.get( presentationResponse.state, (error, session) => {
         var cacheData = {
             "status": presentationResponse.code,

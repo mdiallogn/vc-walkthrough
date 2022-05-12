@@ -1,7 +1,6 @@
 <!-- Copyright (c) Microsoft Corporation. All rights reserved.
      Licensed under the MIT License. -->
 
-     
      <html>
         <head>
             <meta charset="utf-8">
@@ -13,39 +12,24 @@
           
         </head>    
         <body>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
             <div id="wrap">
 
                 <div style="text-align: center;">
                     <img src="Litware-Logo.png" height=200px; />
-                    <h1 style="color: #fff;">Litware 369 Verifiable Credential Employee Issuance and Verifier</h1>
+                    <h1>Litware 369 Verifiable Credential Employee Issuance and Verifier</h1>
             
-                  <!--   <button type="button" id="idInfos" class="button">Fill The Form</button> -->
-                    <button type="button" id="idIssue" class="button">LOGIN TO GET MY CREDENTIAL</button>
-                    <!-- <button type="button" id="idVerify" class="button" style="opacity: 0.6;" disabled>Already Verified</button> -->
-
+                    <button type="button" id="idIssue" class="button">GET CREDENTIAL</button>
+                    <button type="button" id="idVerify" class="button">VERIFY CREDENTIAL</button>
                     <script>
-                            const idIssue = document.getElementById('idIssue');
-                            // const idVerify = document.getElementById('idVerify');
-                            // const verified = document.getElementById('verified');
-                            // const idInfos = document.getElementById('idInfos');
-                            const hsotname = window.location.href;
-
+                            var idIssue = document.getElementById('idIssue');
+                            var idVerify = document.getElementById('idVerify');
                             idIssue.addEventListener('click', () => {
-                                window.location = `${hsotname}auth`;
+                                window.location = "issuer.html";
                             })
-                           
-
-                            // idIssue.addEventListener('click', () => {
-                                // window.location = "issuer.html";
-                            // })
-                            // idVerify.addEventListener('click', () => {
-                                // window.location = "verifier.html";
-                            // })
-// 
-                    </script>
-
+                            idVerify.addEventListener('click', () => {
+                                window.location = "verifier.html";
+                            })
+                        </script>
                 </div>
 
             </div>

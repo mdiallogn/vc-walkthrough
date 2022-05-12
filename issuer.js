@@ -9,37 +9,22 @@ var express = require('express')
 var session = require('express-session');
 var base64url = require('base64url')
 var secureRandom = require('secure-random');
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser')
 // mod.cjs
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const https = require('https');
-const url = require('url');
+const https = require('https')
+const url = require('url')
 const { SSL_OP_COOKIE_EXCHANGE } = require('constants');
 var msal = require('@azure/msal-node');
 var uuid = require('uuid');
 var mainApp = require('./app.js');
-const fs = require('file-system');
 
 var parser = bodyParser.urlencoded({ extended: false });
-
-const MongoClient = require('mongodb').MongoClient;
-const dbUrl = "mongodb://127.0.0.1:27017/";
-var dbName = null;
-
-
-  MongoClient.connect(dbUrl, (err, client) => {
-    if (err) throw err;
-    dbName = client.db("vcdemo");
-    console.log("Conneceted with the server !");
-  });
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Setup the issuance request payload template
 //////////// Setup the issuance request payload template
 var requestConfigFile = process.argv.slice(2)[1];
-
 if ( !requestConfigFile ) {
   requestConfigFile = process.env.ISSUANCEFILE || './issuance_request_config.json';
 }
@@ -74,43 +59,10 @@ function generatePin( digits ) {
   var number = Math.floor( Math.random() * (max - min + 1) ) + min;
   return ("" + number).substring(add); 
 }
-
-const  getFormattedUrl = (req) => {
-  return url.format({
-      protocol: req.protocol,
-      hostname: req.get('host')
-  });
-}
-
-mainApp.app.get('/api/issuer/get-employee', (req, res) => {
-  const employee = require('./public/employees.json');
-  console.log("get :: ", employee);
-  res.send(employee);
-});
-
-
-mainApp.app.post('/api/issuer/add-employee', (req, res) => {
-
-  const newEmployee = {firstName : req.body.firstName, lastName : req.body.lastName};
-  console.log('Employee Name :: ', newEmployee);
-
-  fs.writeFile("./public/employees.json", JSON.stringify(newEmployee), err => {
-     
-    // Checking for errors
-    if (err) throw err; 
-   
-    // console.log("Done writing"); 
-    res.redirect(getFormattedUrl(req));
-    res.send();
-  
-  });
-});
-/*
+/**
  * This method is called from the UI to initiate the issuance of the verifiable credential
  */
 mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
-  
-  console.log("request trace :: ");
   requestTrace( req );
   var id = req.session.id;
   // prep a session state of 0
@@ -152,17 +104,15 @@ mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
   // pincode is only used when the payload contains claim value pairs which results in an IDTokenhint
   if ( issuanceConfig.issuance.pin ) {
     issuanceConfig.issuance.pin.value = generatePin( issuanceConfig.issuance.pin.length );
-  } 
+  }
   // here you could change the payload manifest and change the firstname and lastname
+ /*  issuanceConfig.issuance.claims.given_name = "John";
+  issuanceConfig.issuance.claims.family_name = "Doe"; */
 
-  const employee = require('./public/employees.json');
+  //console.log( 'VC Client API Request' );
+  //console.log( issuanceConfig );
 
-  issuanceConfig.issuance.claims.given_name = req.body =   employee.firstName; 
-  issuanceConfig.issuance.claims.family_name =  req.body = employee.lastName;
-  console.log( 'VC Client API Request' );
-  console.log("Employees ::: ", employee);  
   var payload = JSON.stringify(issuanceConfig);
-  
   const fetchOptions = {
     method: 'POST',
     body: payload,
@@ -173,7 +123,6 @@ mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
     }
   };
 
- 
   var client_api_request_endpoint = `https://beta.eu.did.msidentity.com/v1.0/${mainApp.config.azTenantId}/verifiablecredentials/request`;
   const response = await fetch(client_api_request_endpoint, fetchOptions);
   var resp = await response.json()
@@ -186,13 +135,7 @@ mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
   }
   console.log( 'VC Client API Response' );
   console.log( resp );  
- 
   res.status(200).json(resp);       
-});
-
-mainApp.app.get('/api/issuer/authentication-request-callback', (req, res) => {
-  console.log('auth calback :: ', req.query.code);
-  res.send();
 })
 /**
  * This method is called by the VC Request API when the user scans a QR code and presents a Verifiable Credential to the service
@@ -260,6 +203,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
         });
       })      
     }
+
     console.log(message);
     
     res.send()
@@ -280,51 +224,4 @@ mainApp.app.get('/api/issuer/issuance-response', async (req, res) => {
       res.status(200).json(session.sessionData);   
       }
   })
-});
-
-const authConfig = {
-  auth: {
-      clientId: mainApp.config.azClientId,
-      authority: "https://login.microsoftonline.com/"+mainApp.config.azTenantId,
-      clientSecret: mainApp.config.azClientSecret
-  },
-  system: {
-      loggerOptions: {
-          loggerCallback(loglevel, message, containsPii) {
-              console.log(message);
-          },
-          piiLoggingEnabled: false,
-          logLevel: msal.LogLevel.Verbose,
-      }
-  }
-};
-
-const ccaBis = new msal.ConfidentialClientApplication(authConfig);
-
-mainApp.app.get('/api/issuer/authenticate', (req, res) => {
-      const authCodeUrlParameters = {
-          scopes: ["user.read"],
-          redirectUri: `https://${req.hostname}/api/issuer/auth-callback`,
-      };
-
-      // get url to sign user in and consent to scopes needed for application
-      ccaBis.getAuthCodeUrl(authCodeUrlParameters).then((response) => {
-          res.redirect(response);
-      }).catch((error) => console.log(JSON.stringify(error)));
-});
-
-mainApp.app.get('/api/issuer/auth-callback', (req, res) => {
-  const tokenRequest = {
-      code: req.query.code,
-      scopes: ["user.read"],
-      redirectUri: `https://${req.hostname}/api/issuer/auth-callback`,
-  };
-
-  ccaBis.acquireTokenByCode(tokenRequest).then((response) => {
-      console.log("\nResponse: \n:", response);
-      res.sendStatus(200);
-  }).catch((error) => {
-      console.log(error);
-      res.status(500).send(error);
-  });
-});
+})

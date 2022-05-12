@@ -14,11 +14,11 @@
         
     <body>
         <div id="wrap">
-            <div style="text-align: center; color: #fff;">
+            <div style="text-align: center;">
                 <img src="Litware-Logo.png" height=200px; />
                 <h1>Verifiable Credential Employee Issuance</h1>
         
-            <button type="button" id="sign-in" class="button" onclick="issue()">GET CREDENTIALS</button>
+            <button type="button" id="sign-in" class="button">GET CREDENTIAL</button>
             <div id="qrText"  style="display:none;">
                 <p class="small-text">
                     <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
@@ -29,7 +29,7 @@
             <div id="qrcode" style="text-align: center"></div>
             <div id="pinCodeText" style="display: none"></div>
 
-            <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none;">
+            <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none">
                <i class="fas fa-user-check green icon-text-large margin-bottom-25"></i>
                <div id="message"></div>
                <br />
@@ -41,24 +41,15 @@
                 var signIn = document.getElementById('sign-in');
                 var signOut = document.getElementById('sign-out');
                 var display = document.getElementById('display');
-               
-                var qrcode = new QRCode("qrcode", 
-                                        { 
-                                          width: 300,
-                                          height: 300,
-                                          colorDark : "#5868bf",
-	                                      colorLight : "#ffffff",
-                                          correctLevel : QRCode.CorrectLevel.H
-                                        });
+                var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
                 var respIssuanceReq = null;
-                const issue = () => {
+                signIn.addEventListener('click', () => {
                     fetch('/api/issuer/issuance-request')
                     .then(function(response) {
                         response.text()
                         .catch(error => document.getElementById("message").innerHTML = error)
                         .then(function(message) {
                             respIssuanceReq = JSON.parse(message);
-                            console.log("response issuance : ", respIssuanceReq);
                             if( /Android/i.test(navigator.userAgent) ) {
                                 console.log(`Android device! Using deep link (${respIssuanceReq.url}).`);
                                 window.location.href = respIssuanceReq.url; setTimeout(function () {
@@ -88,6 +79,7 @@
                     }).catch(error => { console.log(error.message); })
                     var checkStatus = setInterval(function () {
 
+                        console.log("debug :: "+JSON.stringify(respIssuanceReq));
                         fetch('api/issuer/issuance-response?id=' + respIssuanceReq.id )
                             .then(response => response.text())
                             .catch(error => document.getElementById("message").innerHTML = error)
@@ -106,21 +98,20 @@
                                         document.getElementById('message').innerHTML = respMsg.message;
                                     }
                                     if (respMsg.status == 'issuance_successful') {
-                                        // document.getElementById('pinCodeText').style.display = "none";
+                                        document.getElementById('pinCodeText').style.display = "none";
                                         document.getElementById('message').innerHTML = respMsg.message;
-                                        window.location = 'verifier.html';
                                         clearInterval(checkStatus);
                                     }
                                     if (respMsg.status == 'issuance_error') {
-                                        // document.getElementById('pinCodeText').style.display = "none";
+                                        document.getElementById('pinCodeText').style.display = "none";
                                         document.getElementById('message').innerHTML = "Issuance error occurred, did you enter the wrong pincode? Please refresh the page and try again.";
                                         document.getElementById('payload').innerHTML = "Payload: " + respMsg.payload;
                                         clearInterval(checkStatus);
                                     }
                                 }
                             })
-                    }, 500);
-                }
+                    }, 1500);
+                })
             </script>
             </div>
             </div>
