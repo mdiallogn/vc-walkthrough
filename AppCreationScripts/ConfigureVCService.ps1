@@ -33,7 +33,7 @@ Function ConfigureVCService
         }
     }
     
-    $appId = "bbb94529-53a3-4be5-a069-7eaf2712b826"
+    $appId = "3db474b9-6a0c-4840-96ac-1fceb342124f"
     if ( $null -eq (Get-AzADServicePrincipal -ApplicationId $appId) ) {
       New-AzADServicePrincipal -ApplicationId $appId -DisplayName "Verifiable Credential Request Service"
     }
