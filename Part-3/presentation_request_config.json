@@ -1,0 +1,25 @@
+{
+  "authority": "did:ion: THIS IS YOUR DID FROM THE VC PAGE IN AZURE PORTAL ...set at runtime...",
+  "includeQRCode": false,
+  "registration": {
+    "clientName": "Verifiable Custom Credentials",
+    "purpose": "the purpose why the verifier asks for one or more VCs"
+  },
+  "callback": {
+    "url": "...set at runtime...",
+    "state": "...set at runtime...",
+    "headers": {
+      "api-key": "c4d0f84e-179e-443a-a0a1-7fabd827f95c"
+    }
+  },
+  "presentation": {
+    "includeReceipt": true,
+    "requestedCredentials": [
+      {
+        "type": "VerifiableCredentialsB2C",
+        "purpose": "the purpose why the verifier asks for a VC",
+        "acceptedIssuers": [ "...set at runtime..." ]
+      }
+    ]
+  }
+}
